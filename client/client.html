@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Syncing Data 2</title>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/babel">
+      const init = () => {
+        const socket = io.connect();
+
+        socket.on('connect', () => {
+          socket.emit('join');
+          alert('connected');
+        });
+      };
+
+      window.onload = init;
+    </script>
+  </head>
+  <body>
+    <canvas id="canvas" width="1000" height="500">
+      Please update to an HTML5 capable browser.
+    </canvas>
+  </body>
+</html>
