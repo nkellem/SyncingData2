@@ -6,16 +6,22 @@
   "scripts": {
     "test": "echo \"Tests Completed\"",
     "pretest": "eslint ./src --fix",
-    "start": "node ./src/server.js"
+    "start": "node ./src/server.js",
+    "nodemon": "nodemon --watch ./src ./src/server.js",
+    "build": "babel ./client --out-file ./hosted/bundle.js",
+    "watch": "babel --watch ./client --out-file ./hosted/bundle.js"
   },
   "author": "Noah Kellem",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^4.17.0",
     "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.8.0"
+    "eslint-plugin-import": "^2.8.0",
+    "nodemon": "^1.14.12"
   },
   "dependencies": {
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
   }
 }
