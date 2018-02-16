@@ -6,21 +6,77 @@
     <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/babel">
+      let canvas, ctx, currentSquare, currentScore = 0;
+
+      const determineSquareClicked = socket => {
+        canvas.addEventListener('click', e => {
+          let x = e.pageX - canvas.offsetLeft;
+          let y = e.pageY - canvas.offsetTop;
+
+          if ((x >= currentSquare.x && x <= (currentSquare.x + currentSquare.width)) &&
+              (y >= currentSquare.y && y <= (currentSquare.y + currentSquare.height))) {
+                socket.emit('squareClicked');
+                currentScore++;
+                document.querySelector('#scoreNum').innerHTML = currentScore;
+          }
+        });
+      };
+
+      const redraw = () => {
+        ctx.clearRect(0,0,1000,700);
+        ctx.fillStyle = 'red';
+        ctx.fillRect(currentSquare.x, currentSquare.y, currentSquare.width, currentSquare.height);
+      };
+
+      const receiveNewSquare = data => {
+        currentSquare = data;
+        redraw();
+      };
+
       const init = () => {
         const socket = io.connect();
+        canvas = document.querySelector('#canvas');
+        ctx = canvas.getContext('2d');
 
         socket.on('connect', () => {
           socket.emit('join');
-          alert('connected');
+
+          determineSquareClicked(socket);
+        });
+
+        socket.on('sendNewSquare', data => {
+          receiveNewSquare(data);
         });
       };
 
       window.onload = init;
     </script>
+    <style type="text/css">
+      #canvas {
+        border: 1px solid black;
+        margin: auto;
+      }
+
+      #content {
+        text-align: center;
+      }
+
+      #score {
+        float: right;
+        padding-left: 20px;
+        position: absolute;
+        font-size: 2em;
+      }
+    </style>
   </head>
   <body>
-    <canvas id="canvas" width="1000" height="500">
-      Please update to an HTML5 capable browser.
-    </canvas>
+    <div id="content">
+      <canvas id="canvas" width="1000" height="700">
+        Please update to an HTML5 capable browser.
+      </canvas>
+      <span id="score">
+        Score: <strong id="scoreNum">0</strong>
+      </span>
+    </div>
   </body>
 </html>
